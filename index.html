@@ -19,7 +19,6 @@
   <link rel="stylesheet" href="./static/css/index.css">
   <link rel="icon" href="./static/images/favicon.svg">
   <style>
-    /* 让整个页面的所有部分都使用80%宽度 */
     .container.is-max-desktop {
       max-width: 80% !important;
       width: 80% !important;
@@ -77,15 +76,15 @@
             <span class="author-block">Carnegie Mellon University</span>
           </div>
 
-          <!-- <div class="is-size-5 publication-authors">
-            <span class="author-block">CVPR 2025</span>
-          </div> -->
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">CVPR 2026</span>
+          </div>
 
           <div class="column has-text-centered">
             <div class="publication-links">
               <!-- PDF Link. -->
               <span class="link-block">
-                <a href="https://www.zhongxiaocong.com/projects/flow3r/paper.pdf" 
+                <a href="https://flow3r-project.github.io/projects/flow3r/paper.pdf" 
                 class="external-link button is-normal is-rounded is-dark">
                   <span class="icon">
                       <i class="fas fa-file-pdf"></i>
@@ -93,15 +92,15 @@
                   <span>Paper</span>
                 </a>
               </span>
-              <!-- <span class="link-block">
-                <a href="https://github.com/QitaoZhao/DiffusionSfM"
+              <span class="link-block">
+                <a href="https://github.com/Kidrauh/flow3r"
                    class="external-link button is-normal is-rounded is-dark">
                   <span class="icon">
                       <i class="fab fa-github"></i>
                   </span>
                   <span>Code</span>
                   </a>
-              </span> -->
+              </span>
               <!-- <span class="link-block">
                 <a href="https://huggingface.co/spaces/qitaoz/DiffusionSfM"
                    class="external-link button is-normal is-rounded is-dark">
@@ -173,9 +172,9 @@
 <section class="hero teaser" style="padding: 0 0 30px 0; margin-top: -40px;">
     <div class="container fluid">
         <div class="hero-body is-max-widescreen" style="padding-top: 10px;">
-            <div class="teaser-container" style="background-color: #f5f7fa; border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); padding: 40px; max-width: 85%; margin: 0 auto;">
+            <div class="teaser-container" style="background-color: #f5f7fa; border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); padding: 40px; max-width: 78%; margin: 0 auto;">
                 <center>
-                    <video id="teaser" preload="auto" autoplay muted loop playsinline width="100%" style="max-width: 1100px; border-radius: 8px; pointer-events: none; box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);">
+                    <video id="teaser" preload="auto" autoplay muted loop playsinline width="100%" style="max-width: 980px; border-radius: 8px; pointer-events: none; box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);">
                         <!-- <source src="./projects/flow3r/videos/teaser_video.MOV" type="video/quicktime"> -->
                         <source src="./projects/flow3r/videos/teaser_video.mp4" type="video/mp4">
                     </video>
@@ -224,6 +223,7 @@
                                       touch-action="pan-y"
                                       environment-image="legacy"
                                       camera-orbit="180deg 70deg auto"
+                                      orientation="180deg 180deg 0deg"
                                       zoom-sensitivity="0.2"
                                       camera-controls
                                       interaction-prompt="none"
@@ -322,7 +322,7 @@
 
                         .examples-viewer {
                             width: 100%;
-                            height: 520px;
+                            height: 320px;
                             border-radius: 12px;
                             border: none;
                             background: #ffffff;
@@ -343,7 +343,7 @@
                         }
 
                         .thumb-card {
-                            width: 150px;
+                            width: 110px;
                             background: #ffffff;
                             border-radius: 10px;
                             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
@@ -355,7 +355,7 @@
 
                         .thumb-card img {
                             width: 100%;
-                            height: 95px;
+                            height: 68px;
                             object-fit: cover;
                             cursor: pointer;
                             border: 2px solid transparent;
@@ -381,15 +381,15 @@
 
                         @media (max-width: 768px) {
                             .examples-viewer {
-                                height: 400px;
+                                height: 320px;
                             }
 
                             .thumb-card {
-                                width: 110px;
+                                width: 96px;
                             }
 
                             .thumb-card img {
-                                height: 70px;
+                                height: 60px;
                             }
 
                             .thumb-label {
@@ -463,9 +463,10 @@
 <section class="section" id="interactive-comparisons">
     <div class="container is-max-desktop">
         <div class="columns is-centered has-text-centered">
-            <div class="column is-full section-panel">
-                <h3 class="title is-4">Interactive Comparisons</h3>
-                <div class="content has-text-justified">
+            <div class="column is-full">
+                <h2 class="title is-3">Interactive Comparisons</h2>
+                <div class="section-panel">
+                    <div class="content has-text-justified">
                     <div style="
                     display: grid;
                     grid-template-columns: 1fr 1fr 1fr;
@@ -477,7 +478,7 @@
                             flex-direction: column;
                             justify-content: center;
                             align-items: center;
-                            height: 400px;
+                            height: 320px;
                             background: #ffffff;
                             border-radius: 8px;
                             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -504,7 +505,7 @@
                             flex-direction: column;
                             justify-content: center;
                             align-items: center;
-                            height: 400px;
+                            height: 320px;
                             background: #ffffff;
                             border-radius: 8px;
                             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -531,7 +532,7 @@
                             flex-direction: column;
                             justify-content: center;
                             align-items: center;
-                            height: 400px;
+                            height: 320px;
                             background: #ffffff;
                             border-radius: 8px;
                             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -595,7 +596,7 @@
                         .thumbnail-container video {
                             flex: 0 0 auto;
                             height: auto;
-                            width: 200px;
+                            width: 150px;
                             object-fit: cover;
                             max-width: none;
                         }
@@ -621,7 +622,8 @@
                         @media (max-width: 768px) {
                             .thumbnail-container img,
                             .thumbnail-container video {
-                                height: 100px;
+                                height: 80px;
+                                width: 120px;
                             }
                             
                             #interactive-comparisons .content > div[style*="grid-template-columns"] {
@@ -800,9 +802,10 @@
                         });
                     </script>
                 </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
 </section>
 
 <section class="section">
@@ -848,33 +851,37 @@
       <div class="column is-full-width">
         <h2 class="title is-3">Results</h2>
         <!-- Subsection. -->
-        <h3 class="title is-4">Does Factored Flow Help?</h3>
+        <h3 class="title is-4">Flow Supervision Improves Visual Geometry</h3>
         <div class="content has-text-justified">
           <p>
-            We first compare our factored prediction paradigm against alternative designs and no-flow baselines on static and dynamic scenes.
-            We include two  models trained with full 3D supervision with different numbers of training sequences (denoted as 3d-sup and 3d-sup++). Next, building upon the no-flow baseline 3d-sup, we introduce three additional variants that incorporate flow supervision using different formulations: (1) flow-projective, computes flow explicitly from predicted camera poses and pointmaps via projective geometry; (2) flow-tracking,  adopts a VGGT-style tracking head based on pairwise patch features; (3) flow-factored applies our proposed factored flow prediction formulation. 
-         </p>
+            We first compare our factored prediction paradigm against training with only labeled 3D data, and against alternative flow prediction designs on bothstatic and dynamic scenes.
+            We denote the `base model' trained with only 3D supervision as 3d-sup. Building upon this `no-flow' baseline, we study three variants that incorporate additional unlabeled data via flow supervision using different formulations: (1) flow-projective, computes flow explicitly from predicted camera poses and pointmaps via projective geometry; (2) flow-tracking, adopts a VGGT-style tracking head based on pairwise patch features; (3) flow-factored, applies our proposed factored flow prediction formulation. All models share a (small) VGGT-like architecture, and are trained from scratch.
+        </p>
         </div>
-        <h4 class="title is-5">Static Scene Results</h4>
         <div class="content has-text-justified">
             <p>
-                On ScanNet++, our factored flow prediction model (flow-factored) significantly outperforms the no-flow baseline (3d-sup), while outperforming other alternatives that leverage flow supervision. It even performs highly comparable with the fully-3D-supervised baseline (3d-sup++).
+        We find that on both static and dynamic scenes, our proposed factored flow prediction (flow-factored) yields consistent gains over the model variant without additional unlabeled data (3d-sup) as well as other flow-supervised alternatives.
+        Qualitatively, the figure below shows that flow-factored yields cleaner reconstructions than 3d-sup while also improving over other flow mechanisms.
             </p>
-          </div>
+        </div>
         <div class="content has-text-centered">
-          <img src="./projects/flow3r/figures/result1.png" alt="SPARF Comparison figure." width="75%"/>
+          <img src="./projects/flow3r/figures/com_qua.png" alt="SPARF Comparison figure." width="95%"/>
+          <img src="./projects/flow3r/figures/com_number.png" alt="SPARF Comparison figure." width="95%"/>
         </div>
 
-        <h4 class="title is-5">Dynamic Scene Results</h4>
-        <div class="content has-text-justified">
-            <p>
-                We train seven model variants on OmniWorld and SpatialVID, where OmniWorld provides 3D supervision and SpatialVID offers flow supervision. Consistent with our findings on static scenes, flow-factored with factored flow prediction considerably outperforms the no-flow baseline (3d-sup) and other flow-supervised alternatives. Also, factored flow prediction brings consistent gains by using more data.
-            </p>
-          </div>
-        <div class="content has-text-centered">
-          <img src="./projects/flow3r/figures/result2.png" alt="SPARF Comparison figure." width="75%"/>
-        </div>
         <!--/ Subsection. -->
+
+        <!-- Subsection. -->
+        <h3 class="title is-4">Scaling with Unlabeled Data</h3>
+        <div class="content has-text-justified">
+          <p>
+            To investigate the scaling behavior of the proposed factored flow prediction, we progressively increase the number of unlabeled dynamic videos used for flow supervision on SpatialVID. Specifically, we keep the 3D-labeled OmniWorld set fixed (1K sequences) and scale the number of SpatialVID sequences used to apply the flow loss (3K, 10K, and 20K sequences). For reference, we also train a model using only additional labeled data by increasing OmniWorld to 4K sequences without any unlabeled videos. 
+            The results show that scaling the total number of training sequences to a larger regime (e.g., 10X or 20X the amount used in the 3d-sup no-flow baseline) yields consistent improvements. Notably, using 20K unlabeled videos together with 1K labeled sequences outperforms training with 4K labeled sequences alone.
+        </p>
+        </div>
+        <div class="content has-text-centered">
+            <img src="./projects/flow3r/figures/scale.png" alt="Scaling figure." width="50%"/>
+        </div>
 
 
         <!-- Subsection. -->
