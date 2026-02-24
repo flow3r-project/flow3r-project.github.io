@@ -29,6 +29,14 @@
       max-width: 80% !important;
       width: 80% !important;
     }
+
+    .section-panel {
+      background-color: #f5f5f5;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      padding: 30px;
+      margin: 20px 0;
+    }
   </style>
 
   <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
@@ -165,9 +173,9 @@
 <section class="hero teaser" style="padding: 0 0 30px 0; margin-top: -40px;">
     <div class="container fluid">
         <div class="hero-body is-max-widescreen" style="padding-top: 10px;">
-            <div class="teaser-container" style="background-color: #f5f7fa; border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); padding: 40px; max-width: 70%; margin: 0 auto;">
+            <div class="teaser-container" style="background-color: #f5f7fa; border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); padding: 40px; max-width: 85%; margin: 0 auto;">
                 <center>
-                    <video id="teaser" preload="auto" autoplay muted loop playsinline width="100%" style="max-width: 800px; border-radius: 8px; pointer-events: none; box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);">
+                    <video id="teaser" preload="auto" autoplay muted loop playsinline width="100%" style="max-width: 1100px; border-radius: 8px; pointer-events: none; box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);">
                         <!-- <source src="./projects/flow3r/videos/teaser_video.MOV" type="video/quicktime"> -->
                         <source src="./projects/flow3r/videos/teaser_video.mp4" type="video/mp4">
                     </video>
@@ -190,8 +198,9 @@
           <h2 class="title is-3">Abstract</h2>
           <div class="content has-text-justified">
             <p>
-              We propose flow3r, a scalable framework for visual geometry learning that leverages flow prediction to guide learning using unlabeled monocular videos. Current 3D/4D reconstruction systems primarily rely on dense geometry and pose supervision, and cannot easily generalize to diverse dynamic real-world scenes. In this work, we propose a mechanism to augment training directly from unlabeled videos, leveraging dense 2D correspondences (or 'flow')  between arbitrary image pairs as supervision.
-              Our key insight is that a factored flow prediction module that computes between two images using 'geometry latents' from one image and the 'pose latent' from other can guide visual geometry learning. We first highlight the benefits and scalability of flow supervision in controlled settings and then leverage large-scale unlabeled data to improve off-the-shelf visual geometry models. We evaluate flow3r across diverse 3D benchmarks and demonstrate competitive or state-of-the-art performance, even surpassing supervised models trained with more labeled data.
+                Current feed-forward 3D/4D reconstruction systems rely on dense geometry and pose supervision -- expensive to obtain at scale and particularly scarce for dynamic real-world scenes. We present Flow3r, a framework that augments visual geometry learning with dense 2D correspondences (`flow') as supervision, enabling scalable training from unlabeled monocular videos. Our key insight is that the flow prediction module should be factored: predicting flow between two images using geometry latents from one and pose latents from the other. This factorization directly guides the learning of both scene geometry and camera motion, and naturally extends to dynamic scenes.
+                In controlled experiments, we show that factored flow prediction outperforms alternative designs and that performance scales consistently with unlabeled data.
+                Integrating factored flow into existing visual geometry architectures and training with ~800K unlabeled videos, Flow3r achieves state-of-the-art results across eight benchmarks spanning static and dynamic scenes, with its largest gains on in-the-wild dynamic videos where labeled data is most scarce.
             </p>
           </div>
         </div>
@@ -203,736 +212,598 @@
     <div class="container is-max-desktop">
         <div class="columns is-centered has-text-centered">
             <div class="column is-four-fifths">
-                <h2 class="title is-3">Results</h2>
-            
-                <nav>
-                    <ul>
-                        <li><a id="nav1" href="javascript:void(0);" onclick="showSection('video_4d');setActive('nav1');">Dynamic Scene Reconstruction</a></li>
-                        <li><a id="nav2" href="javascript:void(0);" onclick="showSection('video_3d');setActive('nav2');">Egocentric Scene Reconstruction</a></li>
-                        <li><a id="nav3" href="javascript:void(0);" onclick="showSection('photo');setActive('nav3');">Interactive Comparisons</a></li>
-                    </ul>
-                </nav>
-                <style>
-                    nav ul {
-                        list-style: none;
-                        display: flex;
-                        flex-wrap: nowrap;
-                        justify-content: center;
-                        gap: 10px;
-                        padding: 0;
-                        margin: 20px 0;
-                    }
-                    nav ul li {
-                        margin: 0;
-                        flex: 1;
-                        max-width: 300px;
-                    }
-                    nav ul li a {
-                        display: block;
-                        width: 100%;
-                        padding: 12px 20px;
-                        background-color: #f5f5f5;
-                        color: #333;
-                        text-decoration: none;
-                        border-radius: 5px;
-                        border: 1px solid #ddd;
-                        transition: all 0.3s ease;
-                        cursor: pointer;
-                        font-weight: 500;
-                        text-align: center;
-                        box-sizing: border-box;
-                    }
-                    nav ul li a:hover {
-                        background-color: #e8e8e8;
-                        border-color: #bbb;
-                    }
-                    nav ul li a.active {
-                        background-color: #e3f2fd;
-                        border-color: #90caf9;
-                        color: #1976d2;
-                        font-weight: 600;
-                    }
-                </style>
+                <h2 class="title is-3">Interactive Examples</h2>
+
+                <div class="section-panel">
+                    <div class="examples-viewer-wrap">
+                        <model-viewer id="examples-glb-viewer"
+                                      class="examples-viewer"
+                                      src="./projects/flow3r/3D/garden_flow3r.glb"
+                                      alt="3D Model"
+                                      loading="eager"
+                                      touch-action="pan-y"
+                                      environment-image="legacy"
+                                      camera-orbit="180deg 70deg auto"
+                                      zoom-sensitivity="0.2"
+                                      camera-controls
+                                      interaction-prompt="none"
+                                      render-scale="1"
+                                      minimum-render-scale="1"
+                                      maximum-render-scale="1">
+                        </model-viewer>
+                        <iframe id="examples-iframe-viewer"
+                                class="examples-viewer vframe"
+                                src="./projects/flow3r/build/?playbackPath=/projects/flow3r/recordings/basketball.viser&initialCameraPosition=0.0,0.0,-2.0&initialCameraLookAt=0.0,0.0,1.0&baseSpeed=0.8"
+                                loading="lazy"
+                                style="display: none;"></iframe>
+                    </div>
+
+                    <div class="examples-rows">
+                        <div class="examples-row">
+                            <div class="examples-thumbs" data-type="glb">
+                                <div class="thumb-card">
+                                    <img src="./projects/flow3r/3D/garden.PNG" data-src="./projects/flow3r/3D/garden_flow3r.glb" alt="car">
+                                    <div class="thumb-label">Static Scene</div>
+                                </div>
+                                <div class="thumb-card">
+                                    <img src="./projects/flow3r/3D/outdoor.jpg" data-src="./projects/flow3r/3D/outdoor_flow3r.glb" alt="kitchen1">
+                                    <div class="thumb-label">Static Scene</div>
+                                </div>
+                                <div class="thumb-card">
+                                    <img src="./projects/flow3r/3D/museum.png" data-src="./projects/flow3r/3D/museum_flow3r.glb" alt="kitchen2">
+                                    <div class="thumb-label">Static Scene</div>
+                                </div>
+                                <div class="thumb-card">
+                                    <img src="./projects/flow3r/3D/flower.jpg" data-src="./projects/flow3r/3D/flower_flow3r.glb" alt="room">
+                                    <div class="thumb-label">Static Scene</div>
+                                </div>
+                                <div class="thumb-card">
+                                    <img src="./projects/flow3r/3D/car.jpg" data-src="./projects/flow3r/3D/car2_flow3r.glb" alt="cat">
+                                    <div class="thumb-label">Static Scene</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="examples-row">
+                            <div class="examples-thumbs" data-type="iframe">
+                                <div class="thumb-card">
+                                    <img src="./projects/flow3r/3D/basketball.png" data-src="./projects/flow3r/build/?playbackPath=/projects/flow3r/recordings/basketball.viser&initialCameraPosition=0.0,0.0,-2.0&initialCameraLookAt=0.0,0.0,1.0&baseSpeed=0.8" alt="basketball">
+                                    <div class="thumb-label">Dynamic Scene</div>
+                                </div>
+                                <div class="thumb-card">
+                                    <img src="./projects/flow3r/3D/panda.png" data-src="./projects/flow3r/build/?playbackPath=/projects/flow3r/recordings/panda.viser&initialCameraPosition=0.0,0.0,-1.0&initialCameraLookAt=0.0,0.0,1.0&baseSpeed=0.8" alt="panda">
+                                    <div class="thumb-label">Dynamic Scene</div>
+                                </div>
+                                <div class="thumb-card">
+                                    <img src="./projects/flow3r/3D/mall.png" data-src="./projects/flow3r/build/?playbackPath=/projects/flow3r/recordings/mall1.viser&initialCameraPosition=0.0,0.0,-2.0&initialCameraLookAt=0.0,0.0,1.0&baseSpeed=0.8" alt="mall1">
+                                    <div class="thumb-label">Dynamic Scene</div>
+                                </div>
+                                <div class="thumb-card">
+                                    <img src="./projects/flow3r/3D/mouse.png" data-src="./projects/flow3r/build/?playbackPath=/projects/flow3r/recordings/mouse.viser&initialCameraPosition=0.0,0.0,-1.0&initialCameraLookAt=0.0,0.0,1.0&baseSpeed=0.8" alt="mouse">
+                                    <div class="thumb-label">Dynamic Scene</div>
+                                </div>
+                                <div class="thumb-card">
+                                    <img src="./projects/flow3r/3D/pupu.jpg" data-src="./projects/flow3r/build/?playbackPath=/projects/flow3r/recordings/pupu.viser&initialCameraPosition=-0.648,-0.173,0.144&initialCameraLookAt=0.000,0.000,0.000&initialCameraUp=-0.000,-0.896,-0.443" alt="pupu">
+                                    <div class="thumb-label">Dynamic Scene</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="examples-row">
+                            <div class="examples-thumbs" data-type="iframe">
+                                <div class="thumb-card">
+                                    <img src="./projects/flow3r/3D/alcohol.jpg" data-src="./projects/flow3r/build/?playbackPath=/projects/flow3r/recordings/alcohol.viser&initialCameraPosition=-1.564,-2.724,-1.415&initialCameraLookAt=0.910,0.696,0.434&initialCameraUp=-0.361,-0.795,-0.487" alt="alcohol">
+                                    <div class="thumb-label">Interaction Video</div>
+                                </div>
+                                <div class="thumb-card">
+                                    <img src="./projects/flow3r/3D/pizza.jpg" data-src="./projects/flow3r/build/?playbackPath=/projects/flow3r/recordings/pizza.viser&initialCameraPosition=-0.438,-2.918,-1.567&initialCameraLookAt=0.000,0.000,0.000&initialCameraUp=-0.000,-0.892,-0.453" alt="pizza">
+                                    <div class="thumb-label">Interaction Video</div>
+                                </div>
+                                <div class="thumb-card">
+                                    <img src="./projects/flow3r/3D/gopro.png" data-src="./projects/flow3r/build/?playbackPath=/projects/flow3r/recordings/gopro.viser&initialCameraPosition=0.0,0.0,-3.0&initialCameraLookAt=0.0,0.0,1.0&baseSpeed=0.8" alt="gopro">
+                                    <div class="thumb-label">Interaction Video</div>
+                                </div>
+                                <div class="thumb-card">
+                                    <img src="./projects/flow3r/3D/kitchen.jpg" data-src="./projects/flow3r/build/?playbackPath=/projects/flow3r/recordings/epickitchen.viser&initialCameraPosition=0.0,0.0,-3.0&initialCameraLookAt=0.0,0.0,1.0&baseSpeed=0.8" alt="epickitchen">
+                                    <div class="thumb-label">Interaction Video</div>
+                                </div>
+                                <div class="thumb-card">
+                                    <img src="./projects/flow3r/3D/water.png" data-src="./projects/flow3r/build/?playbackPath=/projects/flow3r/recordings/water.viser&initialCameraPosition=-2.019,-1.631,0.159&initialCameraLookAt=0.767,0.870,0.047&initialCameraUp=-0.661,-0.750,-0.041" alt="water">
+                                    <div class="thumb-label">Interaction Video</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <style>
+                        .examples-viewer-wrap {
+                            margin-bottom: 24px;
+                        }
+
+                        .examples-viewer {
+                            width: 100%;
+                            height: 520px;
+                            border-radius: 12px;
+                            border: none;
+                            background: #ffffff;
+                            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+                        }
+
+                        .examples-rows {
+                            display: flex;
+                            flex-direction: column;
+                            gap: 28px;
+                        }
+
+                        .examples-thumbs {
+                            display: flex;
+                            flex-wrap: wrap;
+                            justify-content: center;
+                            gap: 14px;
+                        }
+
+                        .thumb-card {
+                            width: 150px;
+                            background: #ffffff;
+                            border-radius: 10px;
+                            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+                            overflow: hidden;
+                            display: flex;
+                            flex-direction: column;
+                            align-items: center;
+                        }
+
+                        .thumb-card img {
+                            width: 100%;
+                            height: 95px;
+                            object-fit: cover;
+                            cursor: pointer;
+                            border: 2px solid transparent;
+                            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+                        }
+
+                        .thumb-label {
+                            width: 100%;
+                            font-size: 12px;
+                            font-weight: 600;
+                            color: #2c3e50;
+                            background: #ffffff;
+                            padding: 8px 6px;
+                            text-align: center;
+                            border-top: 1px solid #eef1f5;
+                        }
+
+                        .thumb-card img.is-active {
+                            border-color: #79b4f2;
+                            box-shadow: 0 0 10px rgba(121, 180, 242, 0.5);
+                            transform: scale(1.05);
+                        }
+
+                        @media (max-width: 768px) {
+                            .examples-viewer {
+                                height: 400px;
+                            }
+
+                            .thumb-card {
+                                width: 110px;
+                            }
+
+                            .thumb-card img {
+                                height: 70px;
+                            }
+
+                            .thumb-label {
+                                font-size: 11px;
+                            }
+                        }
+                    </style>
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function() {
+                            const glbViewer = document.getElementById('examples-glb-viewer');
+                            const iframeViewer = document.getElementById('examples-iframe-viewer');
+                            const allThumbs = document.querySelectorAll('.examples-thumbs img');
+
+                            function activateThumb(thumb) {
+                                allThumbs.forEach(item => item.classList.remove('is-active'));
+                                thumb.classList.add('is-active');
+                            }
+
+                            function showGlb(src) {
+                                if (!glbViewer || !iframeViewer || !src) return;
+                                iframeViewer.style.display = 'none';
+                                glbViewer.style.display = 'block';
+                                glbViewer.setAttribute('src', src);
+                                glbViewer.cameraOrbit = "180deg 70deg auto";
+                                if (glbViewer.resetTurntableRotation) {
+                                    glbViewer.resetTurntableRotation(0);
+                                }
+                                if (glbViewer.jumpCameraToGoal) {
+                                    glbViewer.jumpCameraToGoal();
+                                }
+                            }
+
+                            function showIframe(src) {
+                                if (!glbViewer || !iframeViewer || !src) return;
+                                glbViewer.style.display = 'none';
+                                iframeViewer.style.display = 'block';
+                                iframeViewer.setAttribute('src', src);
+                            }
+
+                            if (allThumbs.length) {
+                                const firstThumb = allThumbs[0];
+                                const firstGroup = firstThumb.closest('.examples-thumbs');
+                                if (firstGroup && firstGroup.dataset.type === 'glb') {
+                                    showGlb(firstThumb.getAttribute('data-src'));
+                                }
+                                activateThumb(firstThumb);
+                            }
+
+                            allThumbs.forEach((thumb) => {
+                                thumb.addEventListener('click', () => {
+                                    const group = thumb.closest('.examples-thumbs');
+                                    const type = group ? group.dataset.type : null;
+                                    const src = thumb.getAttribute('data-src');
+                                    if (type === 'glb') {
+                                        showGlb(src);
+                                    } else if (type === 'iframe') {
+                                        showIframe(src);
+                                    }
+                                    activateThumb(thumb);
+                                });
+                            });
+                        });
+                    </script>
+                </div>
             </div>
-            <script>
-                function showSection(sectionId) {
-                    // Hide all dynamic sections
-                    document.querySelectorAll('.dynamic-section').forEach(function(section) {
-                        section.style.display = 'none';
-                    });
-                    
-                    // Show the selected section
-                    const section = document.getElementById(sectionId);
-                    if (section) {
-                        section.style.display = 'block';
-                    }
-                }
-                
-                function setActive(activeId) {
-                    // Remove 'active' class from all links
-                    document.querySelectorAll('nav ul li a').forEach(function(link) {
-                        link.classList.remove('active');
-                    });
-                
-                    // Add 'active' class to the clicked link
-                    document.getElementById(activeId).classList.add('active');
-                }
-                
-                // Initialize: show first section by default
-                document.addEventListener('DOMContentLoaded', function() {
-                    showSection('video_4d');
-                    setActive('nav1');
-                });
-                </script>
         </div>
     </div>
-    <script defer src="./static/js/nav.js"></script>
+</section>
 
-    <section id="video_4d" class="section dynamic-section">
-        <div class="container is-max-desktop">
-            <div class="columns is-centered has-text-centered">
-                <div class="column is-full section-panel">
-                    <h3 class="title is-4">Dynamic Scene Reconstruction</h3>
-                    <div class="carousel-container" style="position: relative; width: 100%; margin: 30px 0;">
-                        <button class="carousel-arrow carousel-arrow-left" onclick="slideCarousel(-1)" style="position: absolute; left: -50px; top: 50%; transform: translateY(-50%); background-color: rgba(0, 0, 0, 0.5); color: white; border: none; border-radius: 50%; width: 50px; height: 50px; cursor: pointer; z-index: 10; font-size: 24px; display: flex; align-items: center; justify-content: center; transition: background-color 0.3s;">
-                            ‹
-                        </button>
-                        <button class="carousel-arrow carousel-arrow-right" onclick="slideCarousel(1)" style="position: absolute; right: -50px; top: 50%; transform: translateY(-50%); background-color: rgba(0, 0, 0, 0.5); color: white; border: none; border-radius: 50%; width: 50px; height: 50px; cursor: pointer; z-index: 10; font-size: 24px; display: flex; align-items: center; justify-content: center; transition: background-color 0.3s;">
-                            ›
-                        </button>
-                        <div class="carousel-wrapper" style="overflow: hidden; width: 100%;">
-                            <div class="carousel-track" id="carousel-track" style="display: flex; transition: transform 0.5s ease-in-out;">
-                                <!-- Slide 1 -->
-                                <div class="carousel-slide" style="min-width: 100%; display: flex; gap: 20px; padding: 0 10px;">
-                                    <div class="iframe-container" style="flex: 1; min-width: 0;">
-                                        <iframe class="vframe"
-                                            src="./projects/flow3r/build/?playbackPath=/projects/flow3r/recordings/basketball.viser&initialCameraPosition=0.0,0.0,-2.0&initialCameraLookAt=0.0,0.0,1.0&baseSpeed=0.8"
-                                            loading="lazy"></iframe>
-                                    </div>
-                                    <div class="iframe-container" style="flex: 1; min-width: 0;">
-                                        <iframe class="vframe"
-                                            src="./projects/flow3r/build/?playbackPath=/projects/flow3r/recordings/panda.viser&initialCameraPosition=0.0,0.0,-1.0&initialCameraLookAt=0.0,0.0,1.0&baseSpeed=0.8"
-                                            loading="lazy"></iframe>
-                                    </div>
-                                </div>
-                                <!-- Slide 2 -->
-                                <div class="carousel-slide" style="min-width: 100%; display: flex; gap: 20px; padding: 0 10px;">
-                                    <div class="iframe-container" style="flex: 1; min-width: 0;">
-                                        <iframe class="vframe"
-                                            src="./projects/flow3r/build/?playbackPath=/projects/flow3r/recordings/mall1.viser&initialCameraPosition=0.0,0.0,-2.0&initialCameraLookAt=0.0,0.0,1.0&baseSpeed=0.8"
-                                            loading="lazy"></iframe>
-                                    </div>
-                                    <div class="iframe-container" style="flex: 1; min-width: 0;">
-                                        <iframe class="vframe"
-                                            src="./projects/flow3r/build/?playbackPath=/projects/flow3r/recordings/mouse.viser&initialCameraPosition=0.0,0.0,-1.0&initialCameraLookAt=0.0,0.0,1.0&baseSpeed=0.8"
-                                            loading="lazy"></iframe>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="carousel-indicators" style="display: flex; justify-content: center; gap: 10px; margin-top: 20px;">
-                            <span class="carousel-dot active" onclick="goToSlide(0)" style="width: 12px; height: 12px; border-radius: 50%; background-color: #1976d2; cursor: pointer; transition: background-color 0.3s;"></span>
-                            <span class="carousel-dot" onclick="goToSlide(1)" style="width: 12px; height: 12px; border-radius: 50%; background-color: #ccc; cursor: pointer; transition: background-color 0.3s;"></span>
-                        </div>
-                        <div style="text-align: center; margin-top: 15px;">
-                            <p style="font-size: 16px; color: #1976d2; font-weight: 600; margin: 0; display: inline-flex; align-items: center; gap: 8px;">
-                                <span style="font-size: 20px;">←</span>
-                                <span>Click arrows to view more visualizations</span>
-                                <span style="font-size: 20px;">→</span>
-                            </p>
-                        </div>
-                    </div>
-                    <script>
-                        let currentSlide = 0;
-                        const totalSlides = 2;
-                        
-                        function slideCarousel(direction) {
-                            currentSlide += direction;
-                            if (currentSlide < 0) {
-                                currentSlide = totalSlides - 1;
-                            } else if (currentSlide >= totalSlides) {
-                                currentSlide = 0;
-                            }
-                            updateCarousel();
-                        }
-                        
-                        function goToSlide(index) {
-                            currentSlide = index;
-                            updateCarousel();
-                        }
-                        
-                        function updateCarousel() {
-                            const track = document.getElementById('carousel-track');
-                            track.style.transform = `translateX(-${currentSlide * 100}%)`;
-                            
-                            // Update indicators
-                            const dots = document.querySelectorAll('.carousel-dot');
-                            dots.forEach((dot, index) => {
-                                if (index === currentSlide) {
-                                    dot.classList.add('active');
-                                    dot.style.backgroundColor = '#1976d2';
-                                } else {
-                                    dot.classList.remove('active');
-                                    dot.style.backgroundColor = '#ccc';
-                                }
-                            });
-                        }
-                        
-                        // Arrow hover effects
-                        document.addEventListener('DOMContentLoaded', function() {
-                            const arrows = document.querySelectorAll('.carousel-arrow');
-                            arrows.forEach(arrow => {
-                                arrow.addEventListener('mouseenter', function() {
-                                    this.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
-                                });
-                                arrow.addEventListener('mouseleave', function() {
-                                    this.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
-                                });
-                            });
-                        });
-                    </script>
-                    <br>
-                    <!-- <div>
-            (Results are downsampled for efficient online rendering)
-          </div> -->
-                    <div class="hide-on-touchscreens" style="
-                        display: flex;
-                        justify-content: center;
-                        gap: 1.5em;
-                        padding-top: 0.5em;
-                    ">
-                        <div>
-                            <i class="ti ti-view-360-arrow"></i> <strong>Left-click</strong> and
-                            drag to rotate
-                        </div>
-                        <div>
-                            <i class="ti ti-arrows-move"></i> <strong>Right-click</strong> and
-                            drag or
-                            <strong>WASD</strong>
-                            to move
-                        </div>
-                        <div><i class="ti ti-zoom"></i> <strong>Scroll</strong> to zoom</div>
-                        <div><strong>Click <i class="fas fa-pause"></i></strong> to pause</div>
-                    </div>
-                    <script>
-                        // Get the paragraph element
-                        var para = document.getElementById('click-interactive');
 
-                        // Add event listeners for mouse enter and mouse leave
-                        para.addEventListener('mouseenter', function () {
-                            para.style.fontSize = '22px'; // Increase font size
-                            para.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)'; // Enhance shadow
-                        });
-
-                        para.addEventListener('mouseleave', function () {
-                            para.style.fontSize = '18px'; // Reset font size
-                            para.style.boxShadow = '0 2px 5px rgba(0,0,0,0.1)'; // Reset shadow
-                        });
-                    </script>
-                </div>
-            </div>
-        </div>
-        <style>
-            .section-panel {
-                background-color: #f5f5f5;
-                border-radius: 10px;
-                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-                padding: 30px;
-                margin: 20px 0;
-            }
-            
-            .visualization-wrapper {
-                display: flex;
-                flex-wrap: nowrap;
-                justify-content: space-between;
-                align-items: flex-start;
-                gap: 20px;
-                width: 100%;
-                margin: 30px 0;
-            }
-            
-            .iframe-container {
-                flex: 1;
-                min-width: 0;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .iframe-container .vframe {
-                width: 100%;
-                height: 500px;
-                border: none;
-                border-radius: 8px;
-                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-            }
-            
-            /* Carousel styles */
-            .carousel-container .iframe-container .vframe {
-                width: 100%;
-                height: 500px;
-            }
-            
-            .carousel-arrow:hover {
-                background-color: rgba(0, 0, 0, 0.8) !important;
-            }
-            
-            @media (max-width: 1024px) {
-                .carousel-arrow {
-                    width: 40px !important;
-                    height: 40px !important;
-                    font-size: 20px !important;
-                }
-                .carousel-arrow-left {
-                    left: -30px !important;
-                }
-                .carousel-arrow-right {
-                    right: -30px !important;
-                }
-            }
-            
-            .iframe-container button {
-                margin-top: 15px;
-                padding: 10px 20px;
-                background-color: #4a90e2;
-                color: white;
-                border: none;
-                border-radius: 5px;
-                cursor: pointer;
-                font-size: 14px;
-                transition: background-color 0.3s ease;
-            }
-            
-            .iframe-container button:hover {
-                background-color: #357abd;
-            }
-            
-            @media (max-width: 768px) {
-                .visualization-wrapper {
-                    flex-direction: column;
-                }
-                
-                .iframe-container .vframe {
-                    height: 400px;
-                }
-            }
-        </style>
-    </section>
-
-    <section id="video_3d" class="section dynamic-section" style="display: none;">
-        <div class="container is-max-desktop">
-            <div class="columns is-centered has-text-centered">
-                <div class="column is-full section-panel">
-                    <h3 class="title is-4">Egocentric Scene Reconstruction</h3>
-                    <div id="wrapper" class="visualization-wrapper" style="margin: 30px 0;">
-                        <div class="iframe-container">
-                            <iframe class="vframe"
-                                src="./projects/flow3r/build/?playbackPath=/projects/flow3r/recordings/gopro.viser&initialCameraPosition=0.0,0.0,-3.0&initialCameraLookAt=0.0,0.0,1.0&baseSpeed=0.8"
-                                loading="lazy"></iframe>
-                        </div>
-                        <div class="iframe-container">
-                            <iframe class="vframe"
-                                src="./projects/flow3r/build/?playbackPath=/projects/flow3r/recordings/epickitchen.viser&initialCameraPosition=0.0,0.0,-3.0&initialCameraLookAt=0.0,0.0,1.0&baseSpeed=0.8"
-                                loading="lazy"></iframe>
-                        </div>
-                    </div>
-                    <br>
-                    <div class="hide-on-touchscreens" style="
-                        display: flex;
-                        justify-content: center;
-                        gap: 1.5em;
-                        padding-top: 0.5em;
-                    ">
-                        <div>
-                            <i class="ti ti-view-360-arrow"></i> <strong>Left-click</strong> and
-                            drag to rotate
-                        </div>
-                        <div>
-                            <i class="ti ti-arrows-move"></i> <strong>Right-click</strong> and
-                            drag or
-                            <strong>WASD</strong>
-                            to move
-                        </div>
-                        <div><i class="ti ti-zoom"></i> <strong>Scroll</strong> to zoom</div>
-                        <div><strong>Click <i class="fas fa-pause"></i></strong> to pause</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="photo" class="section dynamic-section" style="display: none;">
-        <div class="container is-max-desktop">
-            <div class="columns is-centered has-text-centered">
-                <div class="column is-full section-panel">
-                    <h3 class="title is-4">Interactive Comparisons</h3>
-                    <div class="content has-text-justified">
+<section class="section" id="interactive-comparisons">
+    <div class="container is-max-desktop">
+        <div class="columns is-centered has-text-centered">
+            <div class="column is-full section-panel">
+                <h3 class="title is-4">Interactive Comparisons</h3>
+                <div class="content has-text-justified">
+                    <div style="
+                    display: grid;
+                    grid-template-columns: 1fr 1fr 1fr;
+                    gap: 20px;
+                    width: 100%;
+                    margin: 20px 0;">
                         <div style="
-                        display: grid;
-                        grid-template-columns: 1fr 1fr 1fr;
-                        gap: 20px;
-                        width: 100%;
-                        margin: 20px 0;">
-                            <div style="
-                                display: flex;
-                                flex-direction: column;
-                                justify-content: center;
-                                align-items: center;
-                                height: 400px;
-                                background: #ffffff;
-                                border-radius: 8px;
-                                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-                                padding: 10px 0;">
-                                <model-viewer id="QualitativeResult1"
-                                            src="./projects/flow3r/3D/car_flow3r.glb"
-                                            alt="3D Model"
-                                            loading="eager"
-                                            touch-action="pan-y"
-                                            environment-image="legacy"
-                                            camera-orbit="180deg 70deg auto"
-                                            zoom-sensitivity="0.2"
-                                            camera-controls
-                                            interaction-prompt="none"
-                                            render-scale="1"
-                                            minimum-render-scale="1"
-                                            maximum-render-scale="1"
-                                            style="width: 90%; height: 85%; background: #ffffff;">
-                                </model-viewer>
-                                <div style="margin-top: 6px; font-weight: 600; color: #2c3e50;">Flow3r</div>
-                            </div>
-                            <div style="
-                                display: flex;
-                                flex-direction: column;
-                                justify-content: center;
-                                align-items: center;
-                                height: 400px;
-                                background: #ffffff;
-                                border-radius: 8px;
-                                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-                                padding: 10px 0;">
-                                <model-viewer id="QualitativeResult2"
-                                            src="./projects/flow3r/3D/car_vggt.glb"
-                                            alt="3D Model"
-                                            loading="eager"
-                                            touch-action="pan-y"
-                                            environment-image="legacy"
-                                            camera-orbit="180deg 70deg auto"
-                                            zoom-sensitivity="0.2"
-                                            camera-controls
-                                            interaction-prompt="none"
-                                            render-scale="1"
-                                            minimum-render-scale="1"
-                                            maximum-render-scale="1"
-                                            style="width: 90%; height: 85%; background: #ffffff;">
-                                </model-viewer>
-                                <div style="margin-top: 6px; font-weight: 600; color: #2c3e50;">VGGT</div>
-                            </div>
-                            <div style="
-                                display: flex;
-                                flex-direction: column;
-                                justify-content: center;
-                                align-items: center;
-                                height: 400px;
-                                background: #ffffff;
-                                border-radius: 8px;
-                                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-                                padding: 10px 0;">
-                                <model-viewer id="QualitativeResult3"
-                                            src="./projects/flow3r/3D/car_pi3.glb"
-                                            alt="3D Model"
-                                            loading="eager"
-                                            touch-action="pan-y"
-                                            environment-image="legacy"
-                                            camera-orbit="180deg 70deg auto"
-                                            zoom-sensitivity="0.2"
-                                            camera-controls
-                                            interaction-prompt="none"
-                                            render-scale="1"
-                                            minimum-render-scale="1"
-                                            maximum-render-scale="1"
-                                            style="width: 90%; height: 85%; background: #ffffff;">
-                                </model-viewer>
-                                <div style="margin-top: 6px; font-weight: 600; color: #2c3e50;">Pi3</div>
-                            </div>
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: center;
+                            align-items: center;
+                            height: 400px;
+                            background: #ffffff;
+                            border-radius: 8px;
+                            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+                            padding: 10px 0;">
+                            <model-viewer id="QualitativeResult1"
+                                        src="./projects/flow3r/3D/car_flow3r.glb"
+                                        alt="3D Model"
+                                        loading="eager"
+                                        touch-action="pan-y"
+                                        environment-image="legacy"
+                                        camera-orbit="180deg 70deg auto"
+                                        zoom-sensitivity="0.2"
+                                        camera-controls
+                                        interaction-prompt="none"
+                                        render-scale="1"
+                                        minimum-render-scale="1"
+                                        maximum-render-scale="1"
+                                        style="width: 90%; height: 85%; background: #ffffff;">
+                            </model-viewer>
+                            <div style="margin-top: 6px; font-weight: 600; color: #2c3e50;">Flow3r</div>
                         </div>
-                        <div class="content has-text-justified" style="display: flex; justify-content: center; margin-top: 20px;">
-                            <div class="thumbnail-container" id="thumbnail-qualitative" style="justify-content: center;">
-                                <img src="./projects/flow3r/3D/car.png" data-key="car">
-                                <img src="./projects/flow3r/3D/cat.png" data-key="cat">
-                                <img src="./projects/flow3r/3D/room.png" data-key="room">
-                                <img src="./projects/flow3r/3D/kitchen2.png" data-key="kitchen2">
-                            </div>  
+                        <div style="
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: center;
+                            align-items: center;
+                            height: 400px;
+                            background: #ffffff;
+                            border-radius: 8px;
+                            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+                            padding: 10px 0;">
+                            <model-viewer id="QualitativeResult2"
+                                        src="./projects/flow3r/3D/car_vggt.glb"
+                                        alt="3D Model"
+                                        loading="eager"
+                                        touch-action="pan-y"
+                                        environment-image="legacy"
+                                        camera-orbit="180deg 70deg auto"
+                                        zoom-sensitivity="0.2"
+                                        camera-controls
+                                        interaction-prompt="none"
+                                        render-scale="1"
+                                        minimum-render-scale="1"
+                                        maximum-render-scale="1"
+                                        style="width: 90%; height: 85%; background: #ffffff;">
+                            </model-viewer>
+                            <div style="margin-top: 6px; font-weight: 600; color: #2c3e50;">VGGT</div>
+                        </div>
+                        <div style="
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: center;
+                            align-items: center;
+                            height: 400px;
+                            background: #ffffff;
+                            border-radius: 8px;
+                            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+                            padding: 10px 0;">
+                            <model-viewer id="QualitativeResult3"
+                                        src="./projects/flow3r/3D/car_pi3.glb"
+                                        alt="3D Model"
+                                        loading="eager"
+                                        touch-action="pan-y"
+                                        environment-image="legacy"
+                                        camera-orbit="180deg 70deg auto"
+                                        zoom-sensitivity="0.2"
+                                        camera-controls
+                                        interaction-prompt="none"
+                                        render-scale="1"
+                                        minimum-render-scale="1"
+                                        maximum-render-scale="1"
+                                        style="width: 90%; height: 85%; background: #ffffff;">
+                            </model-viewer>
+                            <div style="margin-top: 6px; font-weight: 600; color: #2c3e50;">Pi3</div>
+                        </div>
+                    </div>
+                    <div class="content has-text-justified" style="display: flex; justify-content: center; margin-top: 20px;">
+                        <div class="thumbnail-container" id="thumbnail-qualitative" style="justify-content: center;">
+                            <img src="./projects/flow3r/3D/car_old.png" data-key="car">
+                            <img src="./projects/flow3r/3D/cat.png" data-key="cat">
+                            <img src="./projects/flow3r/3D/room_old.png" data-key="room">
+                            <img src="./projects/flow3r/3D/kitchen2.png" data-key="kitchen2">
                         </div>  
-                        <style>
-                            .thumbnail-container img, .thumbnail-container video {
-                                transition: all 0.3s ease;
-                                border: 3px solid transparent;
-                                cursor: pointer;
-                            }
-                            .thumbnail-selected {
-                                transform: scale(1.2);
-                                border: 6px solid #79b4f2 !important; 
-                                box-shadow: 0 0 10px rgba(121, 180, 242, 0.5);
-                                z-index: 10;
-                                position: relative;
-                            }
-                            
-                            /* New styles for responsive horizontal gallery */
+                    </div>  
+                    <style>
+                        .thumbnail-container img, .thumbnail-container video {
+                            transition: all 0.3s ease;
+                            border: 3px solid transparent;
+                            cursor: pointer;
+                        }
+                        .thumbnail-selected {
+                            transform: scale(1.2);
+                            border: 6px solid #79b4f2 !important; 
+                            box-shadow: 0 0 10px rgba(121, 180, 242, 0.5);
+                            z-index: 10;
+                            position: relative;
+                        }
+                        
+                        .thumbnail-container {
+                            display: flex;
+                            flex-wrap: wrap;
+                            gap: 15px;
+                            padding: 10px 0;
+                            align-items: center;
+                            justify-content: center;
+                        }
+                        
+                        @media (max-width: 768px) {
                             .thumbnail-container {
-                                display: flex;
                                 flex-wrap: wrap;
-                                gap: 15px;
-                                padding: 10px 0;
-                                align-items: center;
-                                justify-content: center;
                             }
-                            
-                            @media (max-width: 768px) {
-                                .thumbnail-container {
-                                    flex-wrap: wrap;
-                                }
-                            }
-                            
-                            .thumbnail-container img, 
+                        }
+                        
+                        .thumbnail-container img, 
+                        .thumbnail-container video {
+                            flex: 0 0 auto;
+                            height: auto;
+                            width: 200px;
+                            object-fit: cover;
+                            max-width: none;
+                        }
+                        
+                        .thumbnail-container::-webkit-scrollbar {
+                            height: 6px;
+                        }
+                        
+                        .thumbnail-container::-webkit-scrollbar-track {
+                            background: #f1f1f1;
+                            border-radius: 10px;
+                        }
+                        
+                        .thumbnail-container::-webkit-scrollbar-thumb {
+                            background: #888;
+                            border-radius: 10px;
+                        }
+                        
+                        .thumbnail-container::-webkit-scrollbar-thumb:hover {
+                            background: #555;
+                        }
+                        
+                        @media (max-width: 768px) {
+                            .thumbnail-container img,
                             .thumbnail-container video {
-                                flex: 0 0 auto;
-                                height: auto;
-                                width: 200px; /* Consistent width */
-                                object-fit: cover;
-                                max-width: none;
+                                height: 100px;
                             }
                             
-                            /* Custom scrollbar styling */
-                            .thumbnail-container::-webkit-scrollbar {
-                                height: 6px;
+                            #interactive-comparisons .content > div[style*="grid-template-columns"] {
+                                grid-template-columns: 1fr !important;
+                            }
+                        }
+                    </style>
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function() {
+                            const firstThumbnail = document.querySelector('#thumbnail-qualitative img:first-child');
+                            if (firstThumbnail) {
+                                firstThumbnail.classList.add('thumbnail-selected');
                             }
                             
-                            .thumbnail-container::-webkit-scrollbar-track {
-                                background: #f1f1f1;
-                                border-radius: 10px;
-                            }
-                            
-                            .thumbnail-container::-webkit-scrollbar-thumb {
-                                background: #888;
-                                border-radius: 10px;
-                            }
-                            
-                            .thumbnail-container::-webkit-scrollbar-thumb:hover {
-                                background: #555;
-                            }
-                            
-                            /* Adjust for smaller screens */
-                            @media (max-width: 768px) {
-                                .thumbnail-container img,
-                                .thumbnail-container video {
-                                    height: 100px;
-                                }
-                                
-                                /* Make model-viewer grid single column on mobile */
-                                #photo .content > div[style*="grid-template-columns"] {
-                                    grid-template-columns: 1fr !important;
+                            const viewers = [];
+                            for (let i = 1; i <= 3; i++) {
+                                const viewer = document.getElementById('QualitativeResult' + i);
+                                if (viewer) {
+                                    viewers.push(viewer);
                                 }
                             }
-                        </style>
-                        <script>
-                            // Initialize thumbnail selection for photo section
-                            document.addEventListener('DOMContentLoaded', function() {
-                                // Select first thumbnail by default
-                                const firstThumbnail = document.querySelector('#thumbnail-qualitative img:first-child');
-                                if (firstThumbnail) {
-                                    firstThumbnail.classList.add('thumbnail-selected');
+                            
+                            viewers.forEach(viewer => {
+                                if ('renderScale' in viewer) {
+                                    viewer.renderScale = 1;
                                 }
-                                
-                                // Get all model-viewers
-                                const viewers = [];
-                                for (let i = 1; i <= 3; i++) {
-                                    const viewer = document.getElementById('QualitativeResult' + i);
-                                    if (viewer) {
-                                        viewers.push(viewer);
-                                    }
+                                if ('minimumRenderScale' in viewer) {
+                                    viewer.minimumRenderScale = 1;
                                 }
-                                
-                                // Lock render scale to avoid quality drops during interaction
+                                if ('maximumRenderScale' in viewer) {
+                                    viewer.maximumRenderScale = 1;
+                                }
+                            });
+                            
+                            let isUpdating = false;
+                            let rafId = null;
+                            let activeViewer = null;
+                            
+                            function updateControlsState() {
                                 viewers.forEach(viewer => {
-                                    if ('renderScale' in viewer) {
-                                        viewer.renderScale = 1;
+                                    if (viewer.getAttribute('interaction-prompt') !== 'none') {
+                                        viewer.setAttribute('interaction-prompt', 'none');
                                     }
-                                    if ('minimumRenderScale' in viewer) {
-                                        viewer.minimumRenderScale = 1;
+                                });
+                            }
+                            
+                            function syncCamera(sourceViewer) {
+                                if (isUpdating) return;
+                                
+                                if (rafId) {
+                                    cancelAnimationFrame(rafId);
+                                }
+                                
+                                rafId = requestAnimationFrame(() => {
+                                    isUpdating = true;
+                                    
+                                    try {
+                                        const orbit = sourceViewer.getCameraOrbit();
+                                        const fieldOfView = sourceViewer.getFieldOfView();
+                                        
+                                        viewers.forEach(viewer => {
+                                            if (viewer !== sourceViewer) {
+                                                viewer.cameraOrbit = `${orbit.theta}rad ${orbit.phi}rad ${orbit.radius}m`;
+                                                viewer.fieldOfView = `${fieldOfView}deg`;
+                                            }
+                                        });
+                                    } catch (e) {
+                                        console.log('Camera sync error:', e);
                                     }
-                                    if ('maximumRenderScale' in viewer) {
-                                        viewer.maximumRenderScale = 1;
+                                    
+                                    isUpdating = false;
+                                });
+                            }
+                            
+                            viewers.forEach((viewer) => {
+                                let isInteracting = false;
+                                
+                                viewer.addEventListener('mousedown', () => {
+                                    isInteracting = true;
+                                    activeViewer = viewer;
+                                    updateControlsState();
+                                });
+                                
+                                viewer.addEventListener('touchstart', () => {
+                                    isInteracting = true;
+                                    activeViewer = viewer;
+                                    updateControlsState();
+                                });
+                                
+                                viewer.addEventListener('mouseup', () => {
+                                    isInteracting = false;
+                                    setTimeout(() => {
+                                        if (activeViewer === viewer) {
+                                            activeViewer = null;
+                                            updateControlsState();
+                                        }
+                                    }, 50);
+                                });
+                                
+                                viewer.addEventListener('touchend', () => {
+                                    isInteracting = false;
+                                    setTimeout(() => {
+                                        if (activeViewer === viewer) {
+                                            activeViewer = null;
+                                            updateControlsState();
+                                        }
+                                    }, 50);
+                                });
+                                
+                                viewer.addEventListener('mouseleave', () => {
+                                    if (isInteracting && activeViewer === viewer) {
+                                        isInteracting = false;
+                                        setTimeout(() => {
+                                            if (activeViewer === viewer) {
+                                                activeViewer = null;
+                                                updateControlsState();
+                                            }
+                                        }, 50);
                                     }
                                 });
                                 
-                                // Flag to prevent circular updates
-                                let isUpdating = false;
-                                let rafId = null;
-                                let activeViewer = null;
-                                
-                                // Hide interaction prompts on all viewers
-                                function updateControlsState() {
-                                    viewers.forEach(viewer => {
-                                        if (viewer.getAttribute('interaction-prompt') !== 'none') {
-                                            viewer.setAttribute('interaction-prompt', 'none');
+                                let lastSyncTime = 0;
+                                viewer.addEventListener('camera-change', () => {
+                                    if (isInteracting && !isUpdating && activeViewer === viewer) {
+                                        const now = performance.now();
+                                        if (now - lastSyncTime >= 16) {
+                                            lastSyncTime = now;
+                                            syncCamera(viewer);
                                         }
-                                    });
-                                }
-                                
-                                // Sync camera from source viewer to all other viewers
-                                function syncCamera(sourceViewer) {
-                                    if (isUpdating) return;
+                                    }
+                                });
+                            });
+                            
+                            updateControlsState();
+                            
+                            const methods = ['flow3r', 'vggt', 'pi3'];
+                            document.querySelectorAll('#thumbnail-qualitative img, #thumbnail-qualitative video').forEach((el) => {
+                                el.addEventListener('click', () => {
+                                    const baseKey = el.getAttribute('data-key');
                                     
-                                    // Cancel any pending animation frame
-                                    if (rafId) {
-                                        cancelAnimationFrame(rafId);
+                                    isUpdating = true;
+                                    
+                                    for (let i = 1; i <= 3; i++) {
+                                        const modelViewer = document.getElementById('QualitativeResult' + i);
+                                        const method = methods[i - 1];
+                                        if (modelViewer && baseKey && method) {
+                                            modelViewer.setAttribute('src', `./projects/flow3r/3D/${baseKey}_${method}.glb`);
+                                            modelViewer.cameraOrbit = "180deg 70deg auto";
+                                            modelViewer.resetTurntableRotation(0);
+                                            modelViewer.jumpCameraToGoal();
+                                        }
                                     }
                                     
-                                    // Use requestAnimationFrame for smooth, fast updates
-                                    rafId = requestAnimationFrame(() => {
-                                        isUpdating = true;
-                                        
-                                        try {
-                                            // Get camera state from source viewer
-                                            const orbit = sourceViewer.getCameraOrbit();
-                                            const fieldOfView = sourceViewer.getFieldOfView();
-                                            
-                                            // Apply to all other viewers
-                                            viewers.forEach(viewer => {
-                                                if (viewer !== sourceViewer) {
-                                                    // Update camera state
-                                                    viewer.cameraOrbit = `${orbit.theta}rad ${orbit.phi}rad ${orbit.radius}m`;
-                                                    viewer.fieldOfView = `${fieldOfView}deg`;
-                                                }
-                                            });
-                                        } catch (e) {
-                                            console.log('Camera sync error:', e);
-                                        }
-                                        
+                                    setTimeout(() => {
                                         isUpdating = false;
-                                    });
-                                }
-                                
-                                // Add camera-change event listeners to all viewers
-                                viewers.forEach((viewer, index) => {
-                                    let isInteracting = false;
-                                    
-                                    // Track when user starts interacting
-                                    viewer.addEventListener('mousedown', () => {
-                                        isInteracting = true;
-                                        activeViewer = viewer;
-                                        updateControlsState();
-                                    });
-                                    
-                                    viewer.addEventListener('touchstart', () => {
-                                        isInteracting = true;
-                                        activeViewer = viewer;
-                                        updateControlsState();
-                                    });
-                                    
-                                    viewer.addEventListener('mouseup', () => {
-                                        isInteracting = false;
-                                        setTimeout(() => {
-                                            if (activeViewer === viewer) {
-                                                activeViewer = null;
-                                                updateControlsState();
-                                            }
-                                        }, 50);
-                                    });
-                                    
-                                    viewer.addEventListener('touchend', () => {
-                                        isInteracting = false;
-                                        setTimeout(() => {
-                                            if (activeViewer === viewer) {
-                                                activeViewer = null;
-                                                updateControlsState();
-                                            }
-                                        }, 50);
-                                    });
-                                    
-                                    // Track mouse leave to handle drag end
-                                    viewer.addEventListener('mouseleave', () => {
-                                        if (isInteracting && activeViewer === viewer) {
-                                            isInteracting = false;
-                                            setTimeout(() => {
-                                                if (activeViewer === viewer) {
-                                                    activeViewer = null;
-                                                    updateControlsState();
-                                                }
-                                            }, 50);
-                                        }
-                                    });
-                                    
-                                    // Only sync if this viewer is being actively interacted with
-                                    let lastSyncTime = 0;
-                                    viewer.addEventListener('camera-change', () => {
-                                        if (isInteracting && !isUpdating && activeViewer === viewer) {
-                                            const now = performance.now();
-                                            // Throttle to ~60fps for smooth but not too frequent updates
-                                            if (now - lastSyncTime >= 16) {
-                                                lastSyncTime = now;
-                                                syncCamera(viewer);
-                                            }
-                                        }
-                                    });
-                                });
-                                
-                                // Initialize controls state
-                                updateControlsState();
-                                
-                                const methods = ['flow3r', 'vggt', 'pi3'];
-                                document.querySelectorAll('#thumbnail-qualitative img, #thumbnail-qualitative video').forEach((el, index) => {
-                                    el.addEventListener('click', () => {
-                                        const baseKey = el.getAttribute('data-key');
-                                        
-                                        isUpdating = true;
-                                        
-                                        // Update all three model-viewers with method-specific models
-                                        for (let i = 1; i <= 3; i++) {
-                                            const modelViewer = document.getElementById('QualitativeResult' + i);
-                                            const method = methods[i - 1];
-                                            if (modelViewer && baseKey && method) {
-                                                modelViewer.setAttribute('src', `./projects/flow3r/3D/${baseKey}_${method}.glb`);
-                                                modelViewer.cameraOrbit = "180deg 70deg auto";
-                                                modelViewer.resetTurntableRotation(0);
-                                                modelViewer.jumpCameraToGoal();
-                                            }
-                                        }
-                                        
-                                        setTimeout(() => {
-                                            isUpdating = false;
-                                        }, 500);
+                                    }, 500);
 
-                                        // Remove selection class from all elements
-                                        document.querySelectorAll('#thumbnail-qualitative img, #thumbnail-qualitative video').forEach(element => {
-                                            element.classList.remove('thumbnail-selected');
-                                        });
-                                        
-                                        // Add selection class to clicked element
-                                        el.classList.add('thumbnail-selected');
-                                        
-                                        // Play video if it's a video element
-                                        if (el.tagName.toLowerCase() === 'video') {
-                                            el.play();
+                                    document.querySelectorAll('#thumbnail-qualitative img, #thumbnail-qualitative video').forEach(element => {
+                                        element.classList.remove('thumbnail-selected');
+                                    });
+                                    
+                                    el.classList.add('thumbnail-selected');
+                                    
+                                    if (el.tagName.toLowerCase() === 'video') {
+                                        el.play();
+                                    }
+                                    
+                                    document.querySelectorAll('#thumbnail-qualitative video').forEach(video => {
+                                        if (video !== el) {
+                                            video.pause();
+                                            video.currentTime = 0;
                                         }
-                                        
-                                        // Pause all other videos
-                                        document.querySelectorAll('#thumbnail-qualitative video').forEach(video => {
-                                            if (video !== el) {
-                                                video.pause();
-                                                video.currentTime = 0;
-                                            }
-                                        });
                                     });
                                 });
                             });
-                        </script>
-                    </div>
+                        });
+                    </script>
                 </div>
             </div>
         </div>
-    </section>
-
+    </div>
+</section>
 
 <section class="section">
     <div class="container is-max-desktop">
