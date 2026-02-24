@@ -6,7 +6,7 @@
         content="DiffusionSfM: Predicting Structure and Motion via Ray Origin and Endpoint Diffusion">
   <meta name="keywords" content="Sparse view, reconstruction, diffusion, Structure-from-Motion">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Flow3r: Factored Flow Prediction for Visual Geometry Learning</title>
+  <title>Flow3r: Factored Flow Prediction for Scalable Visual Geometry Learning</title>
 
 
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro">
@@ -207,7 +207,7 @@
     </div>
   </section>
 
-<section class="section">
+<section class="section gallery-section">
     <div class="container is-max-desktop">
         <div class="columns is-centered has-text-centered">
             <div class="column is-four-fifths">
@@ -353,8 +353,13 @@
                             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
                         }
 
+                        .gallery-section .container.is-max-desktop {
+                            max-width: 100% !important;
+                            width: 100% !important;
+                        }
+
                         .gallery-panel {
-                            max-width: 80%;
+                            max-width: 96%;
                             margin: 20px auto;
                             padding-bottom: 48px;
                         }
@@ -368,13 +373,15 @@
 
                         .examples-thumbs {
                             display: flex;
-                            flex-wrap: wrap;
+                            flex-wrap: nowrap;
                             justify-content: center;
-                            gap: 14px;
+                            gap: 10px;
                         }
 
                         .thumb-card {
-                            width: 110px;
+                            flex: 1 1 0;
+                            max-width: 120px;
+                            min-width: 80px;
                             background: #ffffff;
                             border-radius: 10px;
                             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
@@ -408,6 +415,18 @@
                             border-color: #79b4f2;
                             box-shadow: 0 0 10px rgba(121, 180, 242, 0.5);
                             transform: scale(1.05);
+                        }
+
+                        @media (max-width: 900px) {
+                            .examples-thumbs {
+                                flex-wrap: wrap;
+                            }
+
+                            .thumb-card {
+                                flex: 0 0 auto;
+                                width: 110px;
+                                min-width: auto;
+                            }
                         }
 
                         @media (max-width: 768px) {
@@ -951,15 +970,12 @@
 <section class="section" id="BibTeX">
   <div class="container is-max-desktop content">
     <h2 class="title is-3">BibTeX</h2>
-<pre><code>@misc{cong2026flow3rfactoredflowprediction,
-    title={Flow3r: Factored Flow Prediction for Scalable Visual Geometry Learning}, 
-    author={Zhongxiao Cong and Qitao Zhao and Minsik Jeon and Shubham Tulsiani},
-    year={2026},
-    eprint={2602.20157},
-    archivePrefix={arXiv},
-    primaryClass={cs.CV},
-    url={https://arxiv.org/abs/2602.20157}, 
-}</code></pre>
+<pre><code>@inproceedings{cong2026flow3r,
+    title={Flow3r: Factored Flow Prediction for Scalable Visual Geometry Learning},
+    author={Cong, Zhongxiao and Zhao, Qitao and Jeon, Minsik and Tulsiani, Shubham},
+    booktitle={CVPR},
+    year={2026}
+  }</code></pre>
   </div>
 </section>
 
